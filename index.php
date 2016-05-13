@@ -162,21 +162,26 @@ body {
         </script>
 		  <div class="form-group">
 			  <label for="age">Age Group</label>
-			  <select id="age" name="age">
+
 			  	<?php $options = array(
-				  "0" =>'17&ndash;21',
-				  "1" =>'22&ndash;26',
-				  "2" =>'27&ndash;31',
-				  "3" =>'32&ndash;36',
-				  "4" =>'37&ndash;41',
-				  "5" =>'42&ndash;46');
+				  "0" =>"17&ndash;21",
+				  "1" =>"22&ndash;26",
+				  "2" =>"27&ndash;31",
+				  "3" =>"32&ndash;36",
+				  "4" =>"37&ndash;41",
+				  "5" =>"42&ndash;46");
+
+			  		?>
+			  	<select id="age" name="age">
+			  		<?php
 				  foreach ($options as $key => $value) {
-				  	echo '<option value=' & $key;
+				  	echo '<option value=' . $key;
 				  	echo ($crumbs['age]'] == $key) ? " selected='true'>" : ">";
-			  		echo $value & '</option>';
+			  		echo $value . '</option>';
 				  }
 				  ?>
-			  </select>
+				</select>
+
 		  </div>
 		  <div class="form-group">
 			  <label for="gender">Gender</label>
@@ -185,9 +190,9 @@ body {
 			  		  'male' =>'Male',
 			  		  'female' =>'Female');
 			  		  foreach ($options as $key => $value) {
-			  		  	echo '<option value="' & $key & '"';
+			  		  	echo '<option value="' . $key & '"';
 			  		  	echo ($crumbs['age]'] == $key) ? " selected>" : ">";
-			  		  	echo $value & '</option>';
+			  		  	echo $value . '</option>';
 			  		  }
 			  		  ?>
 
