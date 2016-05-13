@@ -5,8 +5,6 @@
 	fclose($standardsfile);
 
 
-	$crumbs = (isset($_COOKIE['crumbs'])) ? json_decode($_COOKIE['crumbs'], true) : array('age'=>0, 'gender'=>'male');
-
 
 
 	function score($exercise, $reps, $gender='male', $age='0') {
@@ -64,10 +62,6 @@
 		    $run_score = score_run($run, $gender, $age);
 		    $total += $run_score;
 
-		    $crumbs['age'] = $age;
-		    $crumbs['gender'] = $gender;
-
-		    setcookie('crumbs', json_encode($crumbs));
 	}
 ?>
 
@@ -169,17 +163,17 @@ body {
 		  <div class="form-group">
 			  <label for="age">Age Group</label>
 			  <select id="age" name="age">
-			  	<?php $options = [
+			  	<?php $options = array(
 				  "0" =>'17&ndash;21',
 				  "1" =>'22&ndash;26',
 				  "2" =>'27&ndash;31',
 				  "3" =>'32&ndash;36',
 				  "4" =>'37&ndash;41',
-				  "5" =>'42&ndash;46'];
+				  "5" =>'42&ndash;46');
 				  foreach ($options as $key => $value) {
-				  	echo "<option value=$key";
+				  	echo '<option value=' & $key;
 				  	echo ($crumbs['age]'] == $key) ? " selected='true'>" : ">";
-				  	echo "$value</option>";
+			  		echo $value & '</option>';
 				  }
 				  ?>
 			  </select>
@@ -187,13 +181,13 @@ body {
 		  <div class="form-group">
 			  <label for="gender">Gender</label>
 			  <select id="gender" name="gender">
-			  	  	<?php $options = [
+			  	  	<?php $options = array(
 			  		  'male' =>'Male',
-			  		  'female' =>'Female'];
+			  		  'female' =>'Female');
 			  		  foreach ($options as $key => $value) {
 			  		  	echo '<option value="' & $key & '"';
 			  		  	echo ($crumbs['age]'] == $key) ? " selected>" : ">";
-			  		  	echo "$value</option>";
+			  		  	echo $value & '</option>';
 			  		  }
 			  		  ?>
 
