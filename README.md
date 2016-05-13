@@ -7,7 +7,7 @@ This program is implemented using PHP and Javascript. Usage is simple: Input num
 
 Results are produced in simple plain text that is easily selectable so that it can be shared or copy and pasted into a notes document for ongoing tracking of progress in the test.
 
-Cookies are used to save the age group and gender settings.
+Cookies are used to save the age group and gender settings. (Cookies don't work presently).
 
 ## Demo
 [View project here](http://samuelkordik.com/pft)
