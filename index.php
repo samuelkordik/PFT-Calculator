@@ -1,5 +1,14 @@
 <?php
 	include "calc.php";
+
+	$builder = new TestBuilder();
+
+	if (isset($_POST['test'])) {
+		$test = $_POST['test'];
+	} else {
+		$test = 'apft';
+	}
+
 	if (isset($_POST['action']) ){
 		$apft = new APFTTest();
 		$results = $apft->Results();
@@ -33,111 +42,48 @@
   <div class="container">
   	<div>
 
-  	  <!-- Nav tabs
+
   	  <ul class="nav nav-tabs" role="tablist">
-  	    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
-  	    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
-  	    <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>
-  	    <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
+  	  	<?php
+  	  	foreach($builder->getTests() as $testname) {
+  	  		echo '<li role="presentation" ';
+  	  		echo ($test == $testname) ? 'class="active"' : '';
+  	  		echo '><a href="#'.$testname.'" aria-controls="home" role="tab" data-toggle="tab">'.$builder->getTitle($testname).'</a></li>';
+  	  	}
+  	  	?>
   	  </ul>
 
-  	  Tab panes
+
   	  <div class="tab-content">
-  	    <div role="tabpanel" class="tab-pane active" id="home">...</div>
-  	    <div role="tabpanel" class="tab-pane" id="profile">...</div>
-  	    <div role="tabpanel" class="tab-pane" id="messages">...</div>
-  	    <div role="tabpanel" class="tab-pane" id="settings">...</div>
+
+  	  <?php
+  	  	foreach($builder->getTests() as $test) {
+  	  		$active = ($test == $testname);
+  	  		echo  $builder->buildTest($test, $active);
+  	  	}
+  	  ?>
   	  </div>
 
-  	</div> -->
-    <h1>PFT Calculator</h1>
-    <p class="lead">Easy calculator to score the Army Physical Fitness Test</p>
+  	</div>
 
-	<?php if ($results != false) { ?>
-
-	<div class="well">
-		<?php date_default_timezone_set('America/Chicago');?>
-	    <h2>Results on <?php echo date('Y-M-d');?></h2>
-		<dl><dt>Pushups</dt><dd><?php echo $results['pushups'];?> (<em><?php echo $results['pushups_score'];?> points</em>)</dd>
-			<dt>Situps</dt><dd><?php echo $results['situps'];?> (<em><?php echo $results['situps_score'];?> points</em>)</dd>
-			<dt>Two-Mile Run</dt><dd><?php echo $results['run'];?> (<em><?php echo $results['run_score'];?> points</em>)</dd>
-			<dt>Total</dt><dd><?php echo $results['total'];?> points</dd>
-		</dl>
-    </div>
-
-    <?php
+	<?php if ($results != false) {
+		echo $builder->buildResult('apft', $results);
 	} ?>
 
 
-    <form id="pft_test" method="post">
-	    <input type="hidden" name="action" value="score"/>
-	    <div class="form-group">
-		    <label for="pushups">Pushups</label>
-		    <input type="number" class="form-control" id="pushups" name="pushups" placeholder="Pushups">
-		  </div>
-		  <div class="form-group">
-		    <label for="situps">Situps</label>
-		    <input type="number" class="form-control" id="situps" name="situps" placeholder="Situps">
-		  </div>
 
-		  <div class="input-group bootstrap-timepicker timepicker">
-			  <label for="run">Two-Mile Run</label>
-            <input id="run" type="text" name="run" class="form-control input-small">
-            <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
-        </div>
-
-        <script type="text/javascript">
-            $('#run').timepicker({
-	            defaultTime: false,
-	            showMeridian: false,
-	            disableFocus: true,
-	            disableMousewheel: true,
-	            minuteStep: 1,
-	            maxHours: 99
-            });
-        </script>
-		  <div class="form-group">
-			  <label for="age">Age Group</label>
-
-			  	<?php $options = array(
-				  "0" =>"17&ndash;21",
-				  "1" =>"22&ndash;26",
-				  "2" =>"27&ndash;31",
-				  "3" =>"32&ndash;36",
-				  "4" =>"37&ndash;41",
-				  "5" =>"42&ndash;46");
-
-			  		?>
-			  	<select id="age" name="age">
-			  		<?php
-				  foreach ($options as $key => $value) {
-				  	echo '<option value=' . $key;
-				  	echo ($crumbs['age]'] == $key) ? " selected='true'>" : ">";
-			  		echo $value . '</option>';
-				  }
-				  ?>
-				</select>
-
-		  </div>
-		  <div class="form-group">
-			  <label for="gender">Gender</label>
-			  <select id="gender" name="gender">
-			  	  	<?php $options = array(
-			  		  'male' =>'Male',
-			  		  'female' =>'Female');
-			  		  foreach ($options as $key => $value) {
-			  		  	echo '<option value="' . $key & '"';
-			  		  	echo ($crumbs['age]'] == $key) ? " selected>" : ">";
-			  		  	echo $value . '</option>';
-			  		  }
-			  		  ?>
-
-			  	<option value="male" selected>Male</option><option value="female">Female</option></select>
-		  </div>
-		  <button type="submit" class="btn btn-default">Submit</button>
-    </form>
 </div>
     </main>
+            <script type="text/javascript">
+                $('.time-control').timepicker({
+    	            defaultTime: false,
+    	            showMeridian: false,
+    	            disableFocus: true,
+    	            disableMousewheel: true,
+    	            minuteStep: 1,
+    	            maxHours: 99
+                });
+            </script>
     <footer class="footer">
           <div class="container">
           	<h4 class="text-muted">About</h4>

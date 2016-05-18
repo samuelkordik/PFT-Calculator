@@ -1,0 +1,62 @@
+{"apft": {
+		"title": "Army Physical Fitness Test",
+		"components": {
+			"pushups": {
+				"label": "Pushups",
+				"type": "reps"
+			},
+			"situps": {
+				"label": "Situps",
+				"type": "reps"
+			},
+			"run": {
+				"label": "Two Mile Run",
+				"type": "time"
+			},
+			"age": {
+				"label": "Age Group",
+				"type": "age",
+				"options": {
+					"0": "17&ndash;21",
+					"1": "22&ndash;26",
+					"2": "27&ndash;31",
+					"3": "32&ndash;36",
+					"4": "37&ndash;41",
+					"5": "42&ndash;46"
+				}
+			},
+			"gender": {
+				"label": "Gender",
+				"type": "gender"
+			}
+		}
+	},
+	"usmc": {
+		"title": "USMC Physical Fitness Tests",
+		"components": {
+			"pullups": {
+				"label": "Pull-ups",
+				"type": "reps"
+			},
+			"crunches": {
+				"label": "Crunches",
+				"type": "reps"
+			},
+			"run": {
+				"label": "Three Mile Run",
+				"type": "time"
+			},
+			"age": {
+				"label": "Age Group",
+				"type": "age",
+				"options": {
+					"0": "Adult"
+				}
+			},
+			"gender": {
+				"label": "Gender",
+				"type": "gender"
+			}
+		}
+	}
+}
