@@ -1,76 +1,11 @@
 <?php
-	$standardsfile = fopen("standards.json","r") or die("Unable to open standards definitions.");
-	$standards_string = fread($standardsfile, filesize("standards.json"));
-	$standards = json_decode($standards_string, true);
-	fclose($standardsfile);
-
-
-
-
-	function score($exercise, $reps, $gender='male', $age='0') {
-		global $standards;
-
-		$dict = $standards[$exercise][$gender][$age];
-		$keys = array_keys($dict);
-
-		$min = min($keys);
-		$max = max($keys);
-
-		if ($reps > $max) {
-			$score = 100;
-		} elseif ($reps < $min) {
-			$score = 0;
-		} else {
-			$score = $dict[$reps];
-		}
-		return($score);
-	}
-
-	function score_run($str_time, $gender, $age) {
-		global $standards;
-		preg_match('/(^[0-9][0-9]):([0-9][0-9]$)/', $str_time, $matches);
-		$run_time = $matches[1]*60+$matches[2];
-
-		$dict = $standards['run'][$gender][$age];
-
-		$score = 0;
-		foreach ($dict as $key => $value) {
-			if ($run_time < (int) $key) {
-				break;
-			} else {
-				$score = $value;
-			}
-		}
-
-		return $score;
-	}
-
-	if (isset($_POST['action']) ){
-		    ### Score results
-		    $pushups = $_POST['pushups'];
-		    $situps = $_POST['situps'];
-		    $run = $_POST['run'];
-		    $age = $_POST['age'];
-		    $gender = $_POST['gender'];
-
-		    $total = 0;
-		    $pushups_score = score('pushups', $pushups, $gender, $age);
-		    $total += $pushups_score;
-		    $situps_score = score('situps', $situps, $gender, $age);
-		    $total += $situps_score;
-		    //$run_score = score('run', $run, $gender, $age);
-		    $run_score = score_run($run, $gender, $age);
-		    $total += $run_score;
-
-	}
+	include "calc.php";
 ?>
 
 <html>
 	<head>
 
 <script   src="http://code.jquery.com/jquery-2.2.3.min.js"   integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="   crossorigin="anonymous"></script>
-
-
 
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -81,39 +16,33 @@
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 <script src="timepicker.js"></script>
-<style>.bootstrap-timepicker{position:relative}.bootstrap-timepicker.pull-right .bootstrap-timepicker-widget.dropdown-menu{left:auto;right:0}.bootstrap-timepicker.pull-right .bootstrap-timepicker-widget.dropdown-menu:before{left:auto;right:12px}.bootstrap-timepicker.pull-right .bootstrap-timepicker-widget.dropdown-menu:after{left:auto;right:13px}.bootstrap-timepicker .input-group-addon{cursor:pointer}.bootstrap-timepicker .input-group-addon i{display:inline-block;width:16px;height:16px}.bootstrap-timepicker-widget.dropdown-menu{padding:4px}.bootstrap-timepicker-widget.dropdown-menu.open{display:inline-block}.bootstrap-timepicker-widget.dropdown-menu:before{border-bottom:7px solid rgba(0,0,0,0.2);border-left:7px solid transparent;border-right:7px solid transparent;content:"";display:inline-block;position:absolute}.bootstrap-timepicker-widget.dropdown-menu:after{border-bottom:6px solid #fff;border-left:6px solid transparent;border-right:6px solid transparent;content:"";display:inline-block;position:absolute}.bootstrap-timepicker-widget.timepicker-orient-left:before{left:6px}.bootstrap-timepicker-widget.timepicker-orient-left:after{left:7px}.bootstrap-timepicker-widget.timepicker-orient-right:before{right:6px}.bootstrap-timepicker-widget.timepicker-orient-right:after{right:7px}.bootstrap-timepicker-widget.timepicker-orient-top:before{top:-7px}.bootstrap-timepicker-widget.timepicker-orient-top:after{top:-6px}.bootstrap-timepicker-widget.timepicker-orient-bottom:before{bottom:-7px;border-bottom:0;border-top:7px solid #999}.bootstrap-timepicker-widget.timepicker-orient-bottom:after{bottom:-6px;border-bottom:0;border-top:6px solid #fff}.bootstrap-timepicker-widget a.btn,.bootstrap-timepicker-widget input{border-radius:4px}.bootstrap-timepicker-widget table{width:100%;margin:0}.bootstrap-timepicker-widget table td{text-align:center;height:30px;margin:0;padding:2px}.bootstrap-timepicker-widget table td:not(.separator){min-width:30px}.bootstrap-timepicker-widget table td span{width:100%}.bootstrap-timepicker-widget table td a{border:1px transparent solid;width:100%;display:inline-block;margin:0;padding:8px 0;outline:0;color:#333}.bootstrap-timepicker-widget table td a:hover{text-decoration:none;background-color:#eee;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;border-color:#ddd}.bootstrap-timepicker-widget table td a i{margin-top:2px;font-size:18px}.bootstrap-timepicker-widget table td input{width:25px;margin:0;text-align:center}.bootstrap-timepicker-widget .modal-content{padding:4px}@media(min-width:767px){.bootstrap-timepicker-widget.modal{width:200px;margin-left:-100px}}@media(max-width:767px){.bootstrap-timepicker{width:100%}.bootstrap-timepicker .dropdown-menu{width:100%}}
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  position: relative;
-  min-height: 100%;
-}
-body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
-}
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  /* Set the fixed height of the footer here */
-
-  background-color: #f5f5f5;
-}
-.container {
-  width: auto;
-  max-width: 680px;
-  padding: 0 15px;
-}
-.container .text-muted {
-  margin: 20px 0;
-}
+<link rel="stylesheet" href="main.css" />
+<style>
 </style>
 
 </head>
 <body>
 <main class="bs-masthead" id="content" role="main">
   <div class="container">
+  	<div>
+
+  	  <!-- Nav tabs -->
+  	  <ul class="nav nav-tabs" role="tablist">
+  	    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
+  	    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
+  	    <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>
+  	    <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
+  	  </ul>
+
+  	  <!-- Tab panes -->
+  	  <div class="tab-content">
+  	    <div role="tabpanel" class="tab-pane active" id="home">...</div>
+  	    <div role="tabpanel" class="tab-pane" id="profile">...</div>
+  	    <div role="tabpanel" class="tab-pane" id="messages">...</div>
+  	    <div role="tabpanel" class="tab-pane" id="settings">...</div>
+  	  </div>
+
+  	</div>
     <h1>PFT Calculator</h1>
     <p class="lead">Easy calculator to score the Army Physical Fitness Test</p>
 
