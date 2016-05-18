@@ -1,5 +1,12 @@
 <?php
 	include "calc.php";
+	if (isset($_POST['action']) ){
+		$apft = new APFTTest();
+		$results = $apft->Results();
+	} else {
+		$results = false;
+	}
+
 ?>
 
 <html>
@@ -26,7 +33,7 @@
   <div class="container">
   	<div>
 
-  	  <!-- Nav tabs -->
+  	  <!-- Nav tabs
   	  <ul class="nav nav-tabs" role="tablist">
   	    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
   	    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
@@ -34,7 +41,7 @@
   	    <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
   	  </ul>
 
-  	  <!-- Tab panes -->
+  	  Tab panes
   	  <div class="tab-content">
   	    <div role="tabpanel" class="tab-pane active" id="home">...</div>
   	    <div role="tabpanel" class="tab-pane" id="profile">...</div>
@@ -42,19 +49,19 @@
   	    <div role="tabpanel" class="tab-pane" id="settings">...</div>
   	  </div>
 
-  	</div>
+  	</div> -->
     <h1>PFT Calculator</h1>
     <p class="lead">Easy calculator to score the Army Physical Fitness Test</p>
 
-	<?php if (isset($_POST['action'])) { ?>
+	<?php if ($results != false) { ?>
 
 	<div class="well">
 		<?php date_default_timezone_set('America/Chicago');?>
 	    <h2>Results on <?php echo date('Y-M-d');?></h2>
-		<dl><dt>Pushups</dt><dd><?php echo $pushups;?> (<em><?php echo $pushups_score;?> points</em>)</dd>
-			<dt>Situps</dt><dd><?php echo $situps;?> (<em><?php echo $situps_score;?> points</em>)</dd>
-			<dt>Two-Mile Run</dt><dd><?php echo $run;?> (<em><?php echo $run_score;?> points</em>)</dd>
-			<dt>Total</dt><dd><?php echo $total;?> points</dd>
+		<dl><dt>Pushups</dt><dd><?php echo $results['pushups'];?> (<em><?php echo $results['pushups_score'];?> points</em>)</dd>
+			<dt>Situps</dt><dd><?php echo $results['situps'];?> (<em><?php echo $results['situps_score'];?> points</em>)</dd>
+			<dt>Two-Mile Run</dt><dd><?php echo $results['run'];?> (<em><?php echo $results['run_score'];?> points</em>)</dd>
+			<dt>Total</dt><dd><?php echo $results['total'];?> points</dd>
 		</dl>
     </div>
 

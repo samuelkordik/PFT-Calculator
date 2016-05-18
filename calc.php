@@ -3,67 +3,91 @@
  * Contains the actual business logic.
  */
 
-$standardsfile = fopen("standards.json","r") or die("Unable to open standards definitions.");
-$standards_string = fread($standardsfile, filesize("standards.json"));
-$standards = json_decode($standards_string, true);
-fclose($standardsfile);
+class Standards {
+	private $_standards = array();
 
-
-
-
-function score($exercise, $reps, $gender='male', $age='0') {
-	global $standards;
-
-	$dict = $standards[$exercise][$gender][$age];
-	$keys = array_keys($dict);
-
-	$min = min($keys);
-	$max = max($keys);
-
-	if ($reps > $max) {
-		$score = 100;
-	} elseif ($reps < $min) {
-		$score = 0;
-	} else {
-		$score = $dict[$reps];
+	function __construct() {
+		$standardsfile = fopen("standards.json","r") or die("Unable to open standards definitions.");
+		$standards_string = fread($standardsfile, filesize("standards.json"));
+		$this->_standards = json_decode($standards_string, true);
+		fclose($standardsfile);
 	}
-	return($score);
+
+	function getStandards($exercise, $gender, $age) {
+		return $this->_standards[$exercise][$gender][$age];
+	}
 }
 
-function score_run($str_time, $gender, $age) {
-	global $standards;
-	preg_match('/(^[0-9][0-9]):([0-9][0-9]$)/', $str_time, $matches);
-	$run_time = $matches[1]*60+$matches[2];
+class Test {
+	private $_standards;
 
-	$dict = $standards['run'][$gender][$age];
+	function __construct($testtype = 'apft') {
+		$this->_standards = new Standards();
+	}
 
-	$score = 0;
-	foreach ($dict as $key => $value) {
-		if ($run_time < (int) $key) {
-			break;
+	function score($exercise, $reps, $gender='male', $age='0') {
+		$dict = $this->_standards->getStandards($exercise, $gender, $age);
+		$keys = array_keys($dict);
+
+		$min = min($keys);
+		$max = max($keys);
+
+		if ($reps > $max) {
+			$score = 100;
+		} elseif ($reps < $min) {
+			$score = 0;
 		} else {
-			$score = $value;
+			$score = $dict[$reps];
 		}
+		return($score);
 	}
 
-	return $score;
+	function score_run($str_time, $gender, $age) {
+		preg_match('/(^[0-9][0-9]):([0-9][0-9]$)/', $str_time, $matches);
+		$run_time = $matches[1]*60+$matches[2];
+
+		$dict = $this->_standards->getStandards('run', $gender, $age);
+
+		$score = 0;
+		foreach ($dict as $key => $value) {
+			if ($run_time < (int) $key) {
+				break;
+			} else {
+				$score = $value;
+			}
+		}
+
+		return $score;
+	}
 }
 
-if (isset($_POST['action']) ){
+class APFTTest extends Test {
+
+	function __construct() {
+		parent::__construct('apft');
+	}
+
+	function Results () {
+		$ret = array();
 	    ### Score results
-	    $pushups = $_POST['pushups'];
-	    $situps = $_POST['situps'];
-	    $run = $_POST['run'];
+	    $ret['pushups'] = $_POST['pushups'];
+	    $ret['situps'] = $_POST['situps'];
+	    $ret['run'] = $_POST['run'];
 	    $age = $_POST['age'];
 	    $gender = $_POST['gender'];
 
 	    $total = 0;
-	    $pushups_score = score('pushups', $pushups, $gender, $age);
-	    $total += $pushups_score;
-	    $situps_score = score('situps', $situps, $gender, $age);
-	    $total += $situps_score;
+	    $ret['pushups_score'] = $this->score('pushups', $ret['pushups'], $gender, $age);
+	    $total += $ret['pushups_score'];
+	    $ret['situps_score'] = $this->score('situps', $ret['situps'], $gender, $age);
+	    $total += $ret['situps_score'];
 	    //$run_score = score('run', $run, $gender, $age);
-	    $run_score = score_run($run, $gender, $age);
-	    $total += $run_score;
-
+	    $ret['run_score'] = $this->score_run($ret['run'], $gender, $age);
+	    $total += $ret['run_score'];
+	    $ret['total'] = $total;
+		return $ret;
+	}
 }
+
+
+
