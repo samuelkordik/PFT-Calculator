@@ -10,11 +10,14 @@ class Standards {
 		$standardsfile = fopen("standards.json","r") or die("Unable to open standards definitions.");
 		$standards_string = fread($standardsfile, filesize("standards.json"));
 		$this->_standards = json_decode($standards_string, true);
+
 		fclose($standardsfile);
 	}
 
 	function getStandards($test, $exercise, $gender, $age) {
-		return $this->_standards[$test][$exercise][$gender][$age];
+		$return = $this->_standards[$test][$exercise][$gender][$age];
+
+		return $return;
 	}
 
 }
@@ -91,10 +94,11 @@ class TestBuilder {
 	 * Returns html string for results
 	 */
 	function buildResult($test, $results) {
+
 		$def = $this->_blueprint[$test]['components'];
 		date_default_timezone_set('America/Chicago');
 		$html = '<div class="well">';
-		$html .= '<h2>Results for '.$this->getTitle($test).' on '. date('Y-M-d').'</h2>';
+		$html .= '<h4>Results for '.$this->getTitle($test).' on '. date('Y-M-d').'</h4>';
 		$html .= '<dl>';
 		foreach($def as $partname => $part) {
 			if ($part['type'] != 'age' && $part['type'] != 'gender') {
@@ -132,6 +136,7 @@ class Test {
 	}
 
 	function score_reps($exercise, $reps, $gender='male', $age='0') {
+
 		$dict = $this->_standards->getStandards($this->_testtype, $exercise, $gender, $age);
 		$keys = array_keys($dict);
 
@@ -172,6 +177,7 @@ class Test {
 		$total = 0;
 		$gender = $_POST['gender'];
 		$age = $_POST['age'];
+
 		foreach($components as $partname => $part) {
 			$ret[$partname]["actual"] = $_POST[$partname];
 			switch ($part['type']) {
@@ -189,17 +195,3 @@ class Test {
 		return $ret;
 	}
 }
-
-class APFTTest extends Test {
-
-	function __construct() {
-		parent::__construct('apft');
-	}
-
-	function Results () {
-		return $this->getResults();
-	}
-}
-
-
-

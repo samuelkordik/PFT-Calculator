@@ -4,14 +4,10 @@
 	$builder = new TestBuilder();
 
 	if (isset($_POST['test'])) {
-		$test = $_POST['test'];
-	} else {
-		$test = 'apft';
-	}
 
-	if (isset($_POST['action']) ){
-		$apft = new APFTTest();
-		$results = $apft->Results();
+    $testSuite = new Test($_POST['test']);
+
+    $results = $testSuite->getResults();
 	} else {
 		$results = false;
 	}
@@ -41,7 +37,9 @@
 <main class="bs-masthead" id="content" role="main">
   <div class="container">
   	<div>
-
+      <?php if ($results != false) {
+        echo $builder->buildResult($_POST['test'], $results);
+      } ?>
 
   	  <ul class="nav nav-tabs" role="tablist">
   	  	<?php
@@ -66,9 +64,7 @@
 
   	</div>
 
-	<?php if ($results != false) {
-		echo $builder->buildResult('apft', $results);
-	} ?>
+
 
 
 
@@ -84,13 +80,13 @@
     	            maxHours: 99
                 });
             </script>
-    <footer class="footer">
+   <!--  <footer class="footer">
           <div class="container">
           	<h4 class="text-muted">About</h4>
             <p class="text-muted">
     	Simple calculator to score Army Physical Fitness Test and present results in a copy-and-paste friendly manner. Developed by <a href="http://samuelkordik.com/">Samuel Kordik</a> and licensed under MIT license. See <a href="https://github.com/samuelkordik/PFT-Calculator">GitHub Project</a> to view source code, fork, or share.</p>
           </div>
-        </footer>
+        </footer> -->
 
 </body>
 </html>
